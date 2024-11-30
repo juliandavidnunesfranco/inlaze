@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { ThemeProvider } from '@/components/theme-provider';
 import localFont from 'next/font/local';
 import './globals.css';
+import TopBar from '@/components/TopBar';
 
 const geistSans = localFont({
     src: './fonts/GeistVF.woff',
@@ -33,7 +34,15 @@ export default function RootLayout({
                     enableSystem
                     disableTransitionOnChange
                 >
-                    {children}
+                    <div className="flex flex-col min-h-screen">
+                        <header>
+                            <TopBar />
+                        </header>
+                        <main className="flex-grow">{children}</main>
+                        <footer className="py-6 text-center text-sm text-muted-foreground">
+                            <p>© 2024 Inlaze. All rights reserved.</p>
+                        </footer>
+                    </div>
                 </ThemeProvider>
             </body>
         </html>
