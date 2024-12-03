@@ -1,13 +1,14 @@
-import { Sidebar } from '@/components/Sidebar';
-import VideoCarousel from '@/components/VideoCarousel';
+import { Sidebar, VideoCarousel } from '@/components';
 
-export default function Home() {
+export default function Home({ searchParams }: { searchParams: { q: string } }) {
+    const query = searchParams.q ? searchParams.q.trim() : '';
+
     return (
         <>
             <div>
                 <VideoCarousel />
                 <div className="flex">
-                    <Sidebar />
+                    <Sidebar q={query} />
                     <main className="flex-1 p-8 bg-[#f4f4f4] dark:bg-[#5c5c57]">
                         <div className="space-y-8">
                             <section>

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ModeToggle } from './ModeToggle';
+import { ModeToggle } from '@/components';
 
 export default function TopBar() {
     return (

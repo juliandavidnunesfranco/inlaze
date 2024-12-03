@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { ThemeProvider } from '@/components/theme-provider';
 import localFont from 'next/font/local';
 import './globals.css';
-import TopBar from '@/components/TopBar';
+import { TopBar } from '@/components';
 
 const geistSans = localFont({
     src: './fonts/GeistVF.woff',
@@ -39,8 +39,8 @@ export default function RootLayout({
                             <TopBar />
                         </header>
                         <main className="flex-grow">{children}</main>
-                        <footer className="py-6 text-center text-sm text-muted-foreground">
-                            <p>© 2024 Inlaze. All rights reserved.</p>
+                        <footer className="py-2 text-center text-sm text-muted-foreground">
+                            <p>Inlaze {new Date().getFullYear()} &copy; All rights reserved.</p>
                         </footer>
                     </div>
                 </ThemeProvider>
