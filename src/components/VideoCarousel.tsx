@@ -82,6 +82,7 @@ export default function VideoCarousel() {
                             className="w-full h-full object-cover"
                             width={320}
                             height={180}
+                            priority
                         />
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/100 via-transparent to-transparent" />

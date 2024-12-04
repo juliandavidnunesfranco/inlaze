@@ -1,0 +1,375 @@
+
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import axiosRetry from 'axios-retry';
+
+const TMDB_API_KEY = process.env.API_KEY_TMDB || '';
+const TMDB_BASE_URL = 'https://api.themoviedb.org/3/';  // Asegúrate de que esta URL esté correcta
+
+type HTTPMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'OPTIONS' | 'HEAD';
+
+export interface TMDBResponse<T> {
+  page: number;
+  results: T;
+  total_pages: number;
+  total_results: number;
+  message?: string;
+  status_code?: number;
+}
+
+interface Request {
+  method: HTTPMethod;
+  path: string;
+  headers?: Record<string, string>;
+  body?: Record<string, unknown>;
+  query?: Record<string, string>;
+}
+
+export default class Tmdb {
+  private readonly privateKey: string;
+  private readonly baseUrl: string;
+  private readonly axiosInstance: AxiosInstance;
+  private readonly authHeaders: AxiosRequestConfig['headers'];
+  private token: string | null = null;
+  private sessionId: string | null = null;
+
+  constructor() {
+    this.privateKey = TMDB_API_KEY;
+    this.baseUrl = TMDB_BASE_URL;
+    this.authHeaders = {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    };
+
+    this.axiosInstance = axios.create({
+      baseURL: `${this.baseUrl}`,
+      headers: this.authHeaders,
+      params: {
+        api_key: this.privateKey,
+        language: 'es-ES',
+      },
+    });
+
+    // Configurar reintentos automáticos con axios-retry
+    axiosRetry(this.axiosInstance, {
+      retries: 3,
+      retryDelay: axiosRetry.exponentialDelay,
+      retryCondition: axiosRetry.isNetworkOrIdempotentRequestError,
+    });
+
+    if (!this.privateKey) {
+      throw new Error('API key is not defined');
+    }
+
+    this.authenticate()
+      .then(() => {
+        console.log('Authentication successful');
+      })
+      .catch((error) => {
+        console.error('Authentication error:', error);
+        throw error;
+      });
+  }
+
+  // Autenticación: obtenemos un token de solicitud y creamos una sesión de usuario
+  public async authenticate(): Promise<void> {
+    try {
+      // Paso 1: Obtener un nuevo request_token
+      const resToken = await this.axiosInstance.get('authentication/token/new');
+      const requestToken = resToken.data.request_token;
+
+      if (!requestToken) {
+        throw new Error('Failed to retrieve request token');
+      }
+
+      // Paso 2: Validar el token con el usuario (aquí deberías redirigir al usuario a un enlace para autenticarse)
+      // Normalmente esto implicaría enviar el token al cliente, pero para fines de demostración se omite
+      // Como no tenemos un paso real de validación, asumimos que la validación es exitosa
+      // Entonces, después de la validación del usuario, obtenemos el session_id.
+
+      const sessionResponse = await this.axiosInstance.post('authentication/session/new', {
+        request_token,
+      });
+
+      this.sessionId = sessionResponse.data.session_id;
+      console.log('Session ID:', this.sessionId);
+    } catch (error) {
+      console.error('Authentication error:', error);
+      throw error;
+    }
+  }
+
+  // Listar películas populares
+  public async listMovies(page: number = 1): Promise<TMDBResponse<any>> {
+    try {
+      const response = await this.axiosInstance.get('movie/popular', {
+        params: { page },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error listing movies:', error);
+      throw error;
+    }
+  }
+
+  // Agregar una película a los favoritos
+  public async addToFavorites(movieId: number): Promise<any> {
+    if (!this.sessionId) {
+      throw new Error('User is not authenticated');
+    }
+
+    try {
+      const response = await this.axiosInstance.post(
+        `account/{account_id}/favorite`,
+        {
+          media_type: 'movie',
+          media_id: movieId,
+          favorite: true,
+        },
+        {
+          params: { session_id: this.sessionId },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error adding movie to favorites:', error);
+      throw error;
+    }
+  }
+
+  // Enviar una reseña de una película
+  public async submitReview(movieId: number, review: string): Promise<any> {
+    if (!this.sessionId) {
+      throw new Error('User is not authenticated');
+    }
+
+    try {
+      const response = await this.axiosInstance.post(
+        `movie/${movieId}/reviews`,
+        {
+          media_type: 'movie',
+          media_id: movieId,
+          content: review,
+        },
+        {
+          params: { session_id: this.sessionId },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error submitting review:', error);
+      throw error;
+    }
+  }
+}
+
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import axiosRetry from 'axios-retry';
+
+const TMDB_API_KEY = process.env.API_KEY_TMDB || '';
+const TMDB_BASE_URL = 'https://api.themoviedb.org/3/';  // Asegúrate de que esta URL esté correcta
+
+type HTTPMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'OPTIONS' | 'HEAD';
+
+export interface TMDBResponse<T> {
+  page: number;
+  results: T;
+  total_pages: number;
+  total_results: number;
+  message?: string;
+  status_code?: number;
+}
+
+interface Request {
+  method: HTTPMethod;
+  path: string;
+  headers?: Record<string, string>;
+  body?: Record<string, unknown>;
+  query?: Record<string, string>;
+}
+
+export default class Tmdb {
+  private readonly privateKey: string;
+  private readonly baseUrl: string;
+  private readonly axiosInstance: AxiosInstance;
+  private readonly authHeaders: AxiosRequestConfig['headers'];
+  private token: string | null = null;
+  private sessionId: string | null = null;
+
+  constructor() {
+    this.privateKey = TMDB_API_KEY;
+    this.baseUrl = TMDB_BASE_URL;
+    this.authHeaders = {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    };
+
+    this.axiosInstance = axios.create({
+      baseURL: `${this.baseUrl}`,
+      headers: this.authHeaders,
+      params: {
+        api_key: this.privateKey,
+        language: 'es-ES',
+      },
+    });
+
+    // Configurar reintentos automáticos con axios-retry
+    axiosRetry(this.axiosInstance, {
+      retries: 3,
+      retryDelay: axiosRetry.exponentialDelay,
+      retryCondition: axiosRetry.isNetworkOrIdempotentRequestError,
+    });
+
+    if (!this.privateKey) {
+      throw new Error('API key is not defined');
+    }
+
+    this.authenticate()
+      .then(() => {
+        console.log('Authentication successful');
+      })
+      .catch((error) => {
+        console.error('Authentication error:', error);
+        throw error;
+      });
+  }
+
+  // Autenticación: obtenemos un token de solicitud y creamos una sesión de usuario
+  public async authenticate(): Promise<void> {
+    try {
+      // Paso 1: Obtener un nuevo request_token
+      const resToken = await this.axiosInstance.get('authentication/token/new');
+      const requestToken = resToken.data.request_token;
+
+      if (!requestToken) {
+        throw new Error('Failed to retrieve request token');
+      }
+
+      // Paso 2: Validar el token con el usuario (aquí deberías redirigir al usuario a un enlace para autenticarse)
+      // Normalmente esto implicaría enviar el token al cliente, pero para fines de demostración se omite
+      // Como no tenemos un paso real de validación, asumimos que la validación es exitosa
+      // Entonces, después de la validación del usuario, obtenemos el session_id.
+
+      const sessionResponse = await this.axiosInstance.post('authentication/session/new', {
+        request_token,
+      });
+
+      this.sessionId = sessionResponse.data.session_id;
+      console.log('Session ID:', this.sessionId);
+    } catch (error) {
+      console.error('Authentication error:', error);
+      throw error;
+    }
+  }
+
+  // Listar películas populares
+  public async listMovies(page: number = 1): Promise<TMDBResponse<any>> {
+    try {
+      const response = await this.axiosInstance.get('movie/popular', {
+        params: { page },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error listing movies:', error);
+      throw error;
+    }
+  }
+
+  // Agregar una película a los favoritos
+  public async addToFavorites(movieId: number): Promise<any> {
+    if (!this.sessionId) {
+      throw new Error('User is not authenticated');
+    }
+
+    try {
+      const response = await this.axiosInstance.post(
+        `account/{account_id}/favorite`,
+        {
+          media_type: 'movie',
+          media_id: movieId,
+          favorite: true,
+        },
+        {
+          params: { session_id: this.sessionId },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error adding movie to favorites:', error);
+      throw error;
+    }
+  }
+
+  // Enviar una reseña de una película
+  public async submitReview(movieId: number, review: string): Promise<any> {
+    if (!this.sessionId) {
+      throw new Error('User is not authenticated');
+    }
+
+    try {
+      const response = await this.axiosInstance.post(
+        `movie/${movieId}/reviews`,
+        {
+          media_type: 'movie',
+          media_id: movieId,
+          content: review,
+        },
+        {
+          params: { session_id: this.sessionId },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error submitting review:', error);
+      throw error;
+    }
+  }
+}
+
+
+
+
+
+
+
+// pages/api/movies.ts
+import { NextApiRequest, NextApiResponse } from 'next';
+import Tmdb from '../../lib/tmdb'; // Asegúrate de que la clase Tmdb está en esta ruta
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  // Inicializar la instancia de Tmdb
+  const tmdb = new Tmdb();
+
+  try {
+    // Verificar el método HTTP
+    switch (req.method) {
+      case 'GET':
+        // Si el método es GET, obtenemos las películas populares
+        const { page } = req.query; // Puedes obtener el número de página desde la query string
+        const movies = await tmdb.listMovies(Number(page) || 1); // Por defecto, página 1
+        return res.status(200).json(movies); // Enviar las películas como respuesta
+
+      case 'POST':
+        // Si el método es POST, manejamos agregar a favoritos o enviar reseña
+        const { movieId, action, review } = req.body;
+
+        if (action === 'addToFavorites') {
+          const response = await tmdb.addToFavorites(movieId);
+          return res.status(200).json(response); // Respuesta positiva
+        } else if (action === 'submitReview') {
+          if (!review) {
+            return res.status(400).json({ error: 'Review content is required.' });
+          }
+          const response = await tmdb.submitReview(movieId, review);
+          return res.status(200).json(response); // Respuesta positiva
+        } else {
+          return res.status(400).json({ error: 'Invalid action.' });
+        }
+
+      default:
+        return res.status(405).json({ error: 'Method not allowed' }); // Si el método no es GET ni POST
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal server error' }); // Respuesta en caso de error
+  }
+}

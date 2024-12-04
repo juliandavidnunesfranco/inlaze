@@ -61,6 +61,18 @@ export const FilterGenres = () => {
                     </ScrollArea>
                 )}
             </div>
+            <div className="px-3 py-2">
+                <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">authenticate</h2>
+                <Button
+                    variant={'default'}
+                    onClick={async () => {
+                        console.log('authenticate');
+                        const response = await fetch('/api/movies');
+                        const data = await response.json();
+                        console.log(data);
+                    }}
+                ></Button>
+            </div>
         </>
     );
 };

@@ -9,5 +9,6 @@
 6. vscode: Editor con configuracion en el archivo settings.json para formato de pagina , tabulados y mas.
 7. git: Control de versiones -ramas develop y MyCoursera (Principal)
 8. Tailwind : estilos CSS 
+9. Zustand: Estados locales, Global y/o SessionStorage - LocalStorage
 
 --------------------------------------------

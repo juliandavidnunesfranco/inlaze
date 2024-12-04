@@ -1,7 +1,11 @@
 import { Sidebar, VideoCarousel } from '@/components';
 
-export default function Home({ searchParams }: { searchParams: { q: string } }) {
-    const query = searchParams.q ? searchParams.q.trim() : '';
+export default async function Home({
+    searchParams,
+}: {
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+    const query = (await searchParams).query?.toString() || '';
 
     return (
         <>
