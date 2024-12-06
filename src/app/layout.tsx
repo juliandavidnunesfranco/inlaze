@@ -22,8 +22,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
     children,
+    auth,
 }: Readonly<{
     children: React.ReactNode;
+    auth: React.ReactNode;
 }>) {
     return (
         <html lang="en" suppressHydrationWarning>
@@ -38,7 +40,11 @@ export default function RootLayout({
                         <header>
                             <TopBar />
                         </header>
-                        <main className="flex-grow">{children}</main>
+                        <main className="flex-grow">
+                            {auth}
+                            {children}
+                            <div id="modal-root" />
+                        </main>
                         <footer className="py-2 text-center text-sm text-muted-foreground">
                             <p>Inlaze {new Date().getFullYear()} &copy; All rights reserved.</p>
                         </footer>

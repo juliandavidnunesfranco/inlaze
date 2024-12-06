@@ -19,6 +19,12 @@ const nextConfig: NextConfig = {
             },
         ],
     },
+    experimental: {
+        staleTimes: {
+            dynamic: 0, //duracion en segundos de las paginas dinamicas en cache
+            static: 120, //duracion en segundos de las paginas estaticas en cache
+        },
+    },
 };
 
 export default nextConfig;

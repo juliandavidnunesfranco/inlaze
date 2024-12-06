@@ -5,11 +5,12 @@ export async function GET(req: NextRequest) {
     if (req.method !== 'GET') {
         return NextResponse.json({ message: 'Method not allowed' }, { status: 405 });
     }
-    const tmdb = new Tmdb();
-    console.log('tmdb:', tmdb);
-
-    const session_id = await tmdb.authenticate();
-    console.log('session_id:', session_id);
-
-    return NextResponse.json({ session_id }, { status: 200 });
+    try {
+        const tmdb = new Tmdb();
+        const session_id = await tmdb.authenticate();
+        return NextResponse.json({ session_id }, { status: 200 });
+    } catch (error) {
+        console.error('Error in API route:', error);
+        return NextResponse.json({ message: 'Internal server error', error }, { status: 500 });
+    }
 }

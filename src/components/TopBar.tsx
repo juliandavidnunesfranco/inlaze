@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { ModeToggle } from '@/components';
+import { UserRound } from 'lucide-react';
+import { Button } from './ui/button';
 
 export default function TopBar() {
     return (
@@ -29,11 +31,20 @@ export default function TopBar() {
             </div>
 
             {/* Log in - Menu DropDown*/}
-            <div className="flex pr-10">
+            <div className="flex pr-10 gap-2">
                 <div className="hidden md:flex text-right gap-4 items-center">
-                    <p className="text-sm text-muted-foreground">log in</p>
+                    <Link href="/register" prefetch={false}>
+                        <Button
+                            size="icon"
+                            variant="outline"
+                            className="border-[0.1px] border-black dark:border-white"
+                        >
+                            <UserRound className="h-[1.2rem] w-[1.2rem] " />
+                        </Button>
+                    </Link>
                     <ModeToggle />
                 </div>
+
                 <div className="md:hidden">
                     <p>menu</p>
                 </div>
