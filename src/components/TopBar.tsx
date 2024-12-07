@@ -1,7 +1,8 @@
 import Link from 'next/link';
-import { ModeToggle } from '@/components';
-import { UserRound } from 'lucide-react';
+import { ModeToggle, SmallMenu } from '@/components';
 import { Button } from './ui/button';
+import { UserRound } from 'lucide-react';
+
 
 export default function TopBar() {
     return (
@@ -46,7 +47,7 @@ export default function TopBar() {
                 </div>
 
                 <div className="md:hidden">
-                    <p>menu</p>
+                    <SmallMenu />
                 </div>
             </div>
         </nav>

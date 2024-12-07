@@ -29,9 +29,10 @@ export default function Login() {
                             {/* Left side content */}
                             <div className="relative flex flex-col  ">
                                 <Button
+                                    variant={'outline'}
                                     size={'icon'}
                                     onClick={() => router.back()}
-                                    className="absolute top-4 left-4 border-none text-white/70 hover:text-white hover:bg-transparent bg-transparent transition-colors "
+                                    className="absolute top-4 left-4 border-none text-white/70 hover:text-white  transition-colors "
                                 >
                                     <CircleArrowLeft /> Back
                                 </Button>

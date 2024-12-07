@@ -34,6 +34,6 @@ export const useCardStore = create<State>()(
                     state.isCardOpen = false;
                 }),
         })),
-        { name: 'card-storage', storage: createJSONStorage(() => sessionStorage) }
+        { name: 'card-storage', storage: createJSONStorage(() => sessionStorage) } //crea un session storage
     )
 );
