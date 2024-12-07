@@ -12,6 +12,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { House } from 'lucide-react';
+import { closeSession } from '@/lib/actions';
 
 export const SmallMenu = () => {
     const [position, setPosition] = useState('bottom');
@@ -30,7 +31,7 @@ export const SmallMenu = () => {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56 bg-[#f4f4f4] dark:bg-[#5c5c57]">
-                    <DropdownMenuLabel>Menu</DropdownMenuLabel>
+                    <DropdownMenuLabel className="text-center">Menu</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
                         <DropdownMenuRadioItem
@@ -56,7 +57,15 @@ export const SmallMenu = () => {
                             Log in
                         </DropdownMenuRadioItem>
                         <hr />
-                        <DropdownMenuRadioItem value="log Out">Log Out</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem
+                            value="log Out"
+                            onClick={() => {
+                                closeSession();
+                                router.refresh();
+                            }}
+                        >
+                            Log Out
+                        </DropdownMenuRadioItem>
                     </DropdownMenuRadioGroup>
                 </DropdownMenuContent>
             </DropdownMenu>

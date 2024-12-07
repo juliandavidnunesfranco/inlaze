@@ -1,5 +1,4 @@
 import { Sidebar, VideoCarousel } from '@/components';
-//mport { getLoggedInUser, signOut } from '@/lib/appwrite';
 
 export const dynamic = 'force-dynamic';
 
@@ -9,7 +8,6 @@ export default async function Home({
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
     const query = (await searchParams).query?.toString() || '';
-    //const user = await getLoggedInUser();
 
     return (
         <>
@@ -18,9 +16,7 @@ export default async function Home({
                 <div className="flex">
                     <Sidebar q={query} />
                     <main className="flex-1 p-8 bg-[#f4f4f4] dark:bg-[#5c5c57] text-white">
-                        <div className="space-y-8">
-                          
-                        </div>
+                        <div className="space-y-8"></div>
                     </main>
                 </div>
             </div>

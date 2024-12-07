@@ -5,15 +5,26 @@ import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CircleArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
+import { useCardStore } from '@/store';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
+
+import { fetchLogin } from '@/lib/actions';
 
 export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const pathname = usePathname();
     const router = useRouter();
     const routeLogin = pathname.includes('login');
+    const { isCardOpen, openCard, closeCard } = useCardStore();
 
+    const fetchAuthLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        const email = (document.getElementById('email') as HTMLInputElement).value;
+        const password = (document.getElementById('password') as HTMLInputElement).value;
+        const data = { email, password };
+        await fetchLogin({ data });
+    };
     return (
         <>
             <div className="min-h-screen flex items-center justify-center ">
@@ -32,7 +43,7 @@ export default function Login() {
                                     variant={'outline'}
                                     size={'icon'}
                                     onClick={() => router.back()}
-                                    className="absolute top-4 left-4 border-none text-white/70 hover:text-white  transition-colors "
+                                    className="absolute top-4 left-1 border-none text-white/70 hover:text-white  transition-colors w-14"
                                 >
                                     <CircleArrowLeft /> Back
                                 </Button>
@@ -53,14 +64,79 @@ export default function Login() {
                                     </TabsList>
                                     <TabsContent value="signUp">
                                         <Card className="bg-transparent justify-between  items-center space-y-24">
-                                            <CardHeader className="mt-24">
-                                                <Button
-                                                    variant={'default'}
-                                                    className="w-full bg-[#F0B90B] hover:bg-[#262626] text-slate-700 hover:text-white"
-                                                >
-                                                    Register with your Email 📨
-                                                </Button>
-                                            </CardHeader>
+                                            {!isCardOpen && (
+                                                <CardHeader className="mt-24">
+                                                    <Button
+                                                        variant={'default'}
+                                                        className="w-full bg-[#F0B90B] hover:bg-[#262626] text-slate-700 hover:text-white"
+                                                        onClick={() => openCard()}
+                                                    >
+                                                        Register with your Email 📨
+                                                    </Button>
+                                                </CardHeader>
+                                            )}
+
+                                            {isCardOpen && (
+                                                <CardContent className="space-y-6 mt-24 w-full">
+                                                    <div className="relative ">
+                                                        <Input
+                                                            id="username"
+                                                            type="text"
+                                                            className="w-full bg-white rounded-t-md border-none text-slate-700"
+                                                            placeholder="Name"
+                                                            aria-label="User name"
+                                                        />
+                                                    </div>
+
+                                                    <div className="relative ">
+                                                        <Input
+                                                            id="email"
+                                                            type="email"
+                                                            className="w-full bg-white rounded-t-md border-none text-slate-700"
+                                                            placeholder="Email"
+                                                            aria-label="Email address"
+                                                        />
+                                                    </div>
+                                                    <div className="relative ">
+                                                        <Input
+                                                            id="password"
+                                                            type={
+                                                                showPassword ? 'text' : 'password'
+                                                            }
+                                                            className="w-full bg-white rounded-t-md border-none text-slate-700"
+                                                            placeholder="Password"
+                                                            aria-label="Password"
+                                                        />
+                                                        <button
+                                                            type="button"
+                                                            onClick={() =>
+                                                                setShowPassword(!showPassword)
+                                                            }
+                                                            className="absolute right-2 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-700"
+                                                            aria-label={
+                                                                showPassword
+                                                                    ? 'Hide password'
+                                                                    : 'Show password'
+                                                            }
+                                                        >
+                                                            {showPassword ? (
+                                                                <EyeOff size={20} />
+                                                            ) : (
+                                                                <Eye size={20} />
+                                                            )}
+                                                        </button>
+                                                    </div>
+
+                                                    <div className="relative">
+                                                        <Button
+                                                            onClick={closeCard}
+                                                            className="w-full bg-[#F0B90B] hover:bg-[#262626] text-slate-700 hover:text-white"
+                                                        >
+                                                            Send 📫
+                                                        </Button>
+                                                    </div>
+                                                </CardContent>
+                                            )}
 
                                             <CardFooter className="justify-center items-center">
                                                 <CardDescription className="text-white text-center mt-4">
@@ -76,6 +152,7 @@ export default function Login() {
                                                 <CardDescription className="text-white text-center">
                                                     We love having you back
                                                 </CardDescription>
+
                                                 <div className="relative ">
                                                     <Input
                                                         id="email"
@@ -114,7 +191,10 @@ export default function Login() {
                                                 </div>
                                             </CardContent>
                                             <CardFooter className="relative flex flex-col justify-center items-center">
-                                                <Button className="w-full bg-[#F0B90B] hover:bg-[#262626] text-slate-700 hover:text-white">
+                                                <Button
+                                                    className="w-full bg-[#F0B90B] hover:bg-[#262626] text-slate-700 hover:text-white"
+                                                    onClick={fetchAuthLogin}
+                                                >
                                                     Continue 🎞️
                                                 </Button>
                                                 <CardDescription className="text-white text-center mt-4">

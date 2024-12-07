@@ -1,5 +1,5 @@
 'use server';
-import { Client, Account } from 'node-appwrite';
+import { Client, Account, Databases } from 'node-appwrite';
 import { cookies } from 'next/headers';
 import { ID } from 'node-appwrite';
 import { redirect } from 'next/navigation';
@@ -11,11 +11,6 @@ const key = process.env.APPWRITE_KEY || '';
 //const usersCollection = process.env.APPWRITE_USERS_COLLECTIONS || '';
 //const moviesCollection = process.env.APPWRITE_MOVIES_COLLECTIONS || '';
 //const storage = process.env.APPWRITE_STORAGE || '';
-
-
-
-
-
 
 const createSessionClient = async request => {
     const client = new Client().setEndpoint(endpoint).setProject(project);
@@ -41,6 +36,9 @@ const createAdminClient = async () => {
     return {
         get account() {
             return new Account(client);
+        },
+        get databases() {
+            return new Databases(client);
         },
     };
 };
@@ -83,4 +81,4 @@ const signOut = async () => {
 
     redirect('/signup');
 };
-export { signUpWithEmail, getLoggedInUser,  createAdminClient, signOut, createSessionClient };
+export { signUpWithEmail, getLoggedInUser, createAdminClient, signOut, createSessionClient };

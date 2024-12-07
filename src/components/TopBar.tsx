@@ -2,9 +2,13 @@ import Link from 'next/link';
 import { ModeToggle, SmallMenu } from '@/components';
 import { Button } from './ui/button';
 import { UserRound } from 'lucide-react';
+import { cookies } from 'next/headers';
+import { Logout } from './Logout';
 
+export default async function TopBar() {
+    const cookieSession = await cookies();
+    const session = cookieSession.get('session');
 
-export default function TopBar() {
     return (
         <nav className="w-full p-6 flex items-center justify-between">
             <div className="flex items-center">
@@ -32,24 +36,28 @@ export default function TopBar() {
             </div>
 
             {/* Log in - Menu DropDown*/}
-            <div className="flex pr-10 gap-2">
-                <div className="hidden md:flex text-right gap-4 items-center">
-                    <Link href="/register" prefetch={false}>
-                        <Button
-                            size="icon"
-                            variant="outline"
-                            className="border-[0.1px] border-black dark:border-white"
-                        >
-                            <UserRound className="h-[1.2rem] w-[1.2rem] " />
-                        </Button>
-                    </Link>
-                    <ModeToggle />
+            {!session ? (
+                <div className="flex pr-10 gap-2">
+                    <div className="hidden md:flex text-right gap-4 items-center">
+                        <Link href="/register" prefetch={false}>
+                            <Button
+                                size="icon"
+                                variant="outline"
+                                className="border-[0.1px] border-black dark:border-white"
+                            >
+                                <UserRound className="h-[1.2rem] w-[1.2rem] " />
+                            </Button>
+                        </Link>
+                        <ModeToggle />
+                    </div>
+                    {/* small menu */}
+                    <div className="md:hidden">
+                        <SmallMenu />
+                    </div>
                 </div>
-
-                <div className="md:hidden">
-                    <SmallMenu />
-                </div>
-            </div>
+            ) : (
+                <Logout />
+            )}
         </nav>
     );
 }
