@@ -1,2 +1,3 @@
 import { useCardStore } from './ui/ui-card';
-export { useCardStore };
+import { useFavoriteStore } from './favorites/ui-favorites';
+export { useCardStore, useFavoriteStore };

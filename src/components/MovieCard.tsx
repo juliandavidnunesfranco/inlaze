@@ -1,7 +1,7 @@
 'use client';
-
 import { Heart } from 'lucide-react';
-import { useState } from 'react';
+import { useFavoriteStore } from '@/store';
+import { useEffect, useState } from 'react';
 
 interface MovieCardProps {
     movie: {
@@ -14,16 +14,30 @@ interface MovieCardProps {
 }
 
 export function MovieCard({ movie }: MovieCardProps) {
-    const [isFavorite, setIsFavorite] = useState(false);
-        
+    const { isFavorite, addFavorite, removeFavorite } = useFavoriteStore();
+    const [isLocalFavorite, setIsLocalFavorite] = useState(false);
+
+    useEffect(() => {
+        const favoriteStatus = isFavorite(movie.id);
+        setIsLocalFavorite(favoriteStatus);
+    }, [movie.id, isFavorite]);
+
     const rating = Math.round(movie.release_date ? movie.vote_average * 10 : 0);
-    
-   
+
     const formattedDate = new Date(movie.release_date).toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
-        day: 'numeric'
+        day: 'numeric',
     });
+
+    const toggleFavorite = () => {
+        if (isLocalFavorite) {
+            removeFavorite(movie.id);
+        } else {
+            addFavorite(movie.id);
+        }
+        setIsLocalFavorite(!isLocalFavorite);
+    };
 
     return (
         <div className="relative group rounded-lg overflow-hidden bg-gray-900 transition-all duration-300 hover:shadow-[0_0_15px_rgba(59,130,246,0.5)]">
@@ -65,12 +79,12 @@ export function MovieCard({ movie }: MovieCardProps) {
                         </span>
                     </div>
                     <button
-                        onClick={() => setIsFavorite(!isFavorite)}
+                        onClick={toggleFavorite}
                         className="p-2 rounded-full hover:bg-gray-800/50 transition-colors"
                     >
                         <Heart
                             className={`w-6 h-6 ${
-                                isFavorite ? 'fill-red-500 stroke-red-500' : 'stroke-white'
+                                isLocalFavorite ? 'fill-red-500 stroke-red-500' : 'stroke-white'
                             }`}
                         />
                     </button>
@@ -79,4 +93,3 @@ export function MovieCard({ movie }: MovieCardProps) {
         </div>
     );
 }
-
