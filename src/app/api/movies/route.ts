@@ -64,6 +64,8 @@ export async function GET(req: NextRequest) {
             moviesByCategory[category] = movies;
         });
 
+        console.log('Movies by category:', moviesByCategory);
+
         return NextResponse.json({ message: 'ok', moviesByCategory }, { status: 200 });
     } catch (error) {
         console.error('Error in API route:', error);

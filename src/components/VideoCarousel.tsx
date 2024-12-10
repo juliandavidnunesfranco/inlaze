@@ -80,8 +80,8 @@ export default function VideoCarousel() {
                             src={'/assets/images/kung-fu-panda.jpg'}
                             alt="Video"
                             className="w-full h-full object-cover"
-                            width={320}
-                            height={180}
+                            fill
+                            objectFit="cover"
                             priority
                         />
                     )}

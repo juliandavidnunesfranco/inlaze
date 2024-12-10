@@ -31,35 +31,32 @@ export default async function Home({
     } catch (error) {
         console.error('Error connecting to movies API:', error);
     }
-
     return (
         <>
-            <div>
-                <VideoCarousel />
-                <div className="flex">
-                    <Sidebar q={query} />
-                    <main className="flex-1 p-8 bg-[#f4f4f4] dark:bg-[#5c5c57] text-white">
-                        <div className="space-y-8">
-                            {moviesData ? (
-                                Object.entries(
-                                    moviesData.moviesByCategory as Record<string, Movie[]>
-                                ).map(([category, movies]: [string, Movie[]]) => (
-                                    <MovieSlider
-                                        key={category}
-                                        title={category}
-                                        category={category}
-                                        movies={movies}
-                                    />
-                                ))
-                            ) : (
-                                <p className="text-center text-gray-600 dark:text-gray-400">
-                                    No hay películas disponibles.
-                                    <br />
-                                    Por favor, inicie sesión
-                                </p>
-                            )}
-                        </div>
-                    </main>
+            <VideoCarousel />
+            <div className="flex flex-1 overflow-hidden dark:bg-[#5c5c57]">
+                <Sidebar q={query} />
+                <div className="flex-1 overflow-y-auto">
+                    <div className="space-y-8 p-8">
+                        {moviesData ? (
+                            Object.entries(
+                                moviesData.moviesByCategory as Record<string, Movie[]>
+                            ).map(([category, movies]: [string, Movie[]]) => (
+                                <MovieSlider
+                                    key={category}
+                                    title={category}
+                                    category={category}
+                                    movies={movies}
+                                />
+                            ))
+                        ) : (
+                            <p className="text-center text-gray-600 dark:text-gray-400">
+                                No hay películas disponibles.
+                                <br />
+                                Por favor, inicie sesión
+                            </p>
+                        )}
+                    </div>
                 </div>
             </div>
         </>

@@ -41,10 +41,9 @@ export default function RootLayout({
                             {/* @ts-expect-error Server Component */}
                             <TopBar />
                         </header>
-                        <main className="flex-grow">
+                        <main className="flex-grow flex flex-col">
                             {auth}
                             {children}
-                            <div id="modal-root" />
                         </main>
                         <footer className="py-2 text-center text-sm text-muted-foreground">
                             <p>Inlaze {new Date().getFullYear()} &copy; All rights reserved.</p>
