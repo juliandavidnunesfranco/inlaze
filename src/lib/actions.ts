@@ -1,6 +1,8 @@
 'use server';
+import { Genre, Movie, MoviesApiResponse } from '@/types/movies';
 import axios from 'axios';
 import { cookies } from 'next/headers';
+import { normalizeString } from './utils';
 
 const API_URL = process.env.API_BASE_URL || '';
 
@@ -60,5 +62,96 @@ async function fetchLogin({ data }: { data: { email: string; password: string } 
         throw error;
     }
 }
+async function movieList(): Promise<MoviesApiResponse | null> {
+    try {
+        const session = (await cookies()).get('session')?.value;
+        if (!session) return null;
 
-export { fetchLogin, createUserAction };
+        const response = await fetch(`${API_URL}/api/movies`, {
+            method: 'GET',
+            cache: 'no-store',
+            headers: {
+                Cookie: `session=${session}`,
+            },
+        });
+        if (response.ok) {
+            const data = await response.json();
+            return data;
+        }
+    } catch (error) {
+        console.error('Error connecting to movies API:', error);
+    }
+    return null;
+}
+
+async function searchMovies(query: string): Promise<{ results: Movie[] }> {
+    try {
+        const session = (await cookies()).get('session')?.value;
+        let moviesData: MoviesApiResponse | null = null;
+
+        if (session) {
+            const response = await fetch(`${API_URL}/api/movies`, {
+                method: 'GET',
+                cache: 'no-store',
+                headers: {
+                    Cookie: `session=${session}`,
+                },
+            });
+
+            if (response.ok) {
+                moviesData = (await response.json()) as MoviesApiResponse;
+            }
+
+            if (moviesData) {
+                const allMovies = Object.values(
+                    moviesData.moviesByCategory || {}
+                ).flat() as Movie[];
+                const filteredMovies = allMovies.filter(movie =>
+                    movie.title.toLowerCase().includes(query.toLowerCase())
+                );
+                return { results: filteredMovies };
+            }
+        }
+    } catch (error) {
+        console.error('Error searching movies:', error);
+    }
+
+    return { results: [] };
+}
+
+async function getGenres(): Promise<{ result: Genre[] }> {
+    try {
+        const session = (await cookies()).get('session')?.value;
+        if (!session) return { result: [] };
+
+        const response = await fetch(`${API_URL}/api/genres`, {
+            method: 'GET',
+            cache: 'no-store',
+            headers: {
+                Cookie: `session=${session}`,
+            },
+        });
+        if (response.ok) {
+            const data = await response.json();
+            const genres: Genre[] = data.genres;
+            return { result: genres };
+        }
+    } catch (error) {
+        console.error('Error searching movies:', error);
+    }
+
+    return { result: [] };
+}
+
+async function getGenreByName(name: string): Promise<Genre[] | undefined> {
+    const genres = await getGenres();
+
+    if (genres.result) {
+        const genre = genres.result.find(
+            genre => normalizeString(genre.name) === normalizeString(name)
+        );
+        return genre ? [genre] : undefined;
+    }
+}
+
+export { fetchLogin, createUserAction, searchMovies, getGenreByName, getGenres, movieList };

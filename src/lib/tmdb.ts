@@ -1,4 +1,4 @@
-import { MovieCategory, TmdbApiResponse } from '@/types/movies';
+import { Genre, GenresApiResponse, MovieCategory, TmdbApiResponse } from '@/types/movies';
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import axiosRetry from 'axios-retry';
 import { cookies } from 'next/headers';
@@ -108,6 +108,16 @@ export default class Tmdb {
             return data;
         } catch (error) {
             console.error(`Error fetching ${category} movies:`, error);
+            throw error;
+        }
+    }
+
+    async getGenresList(): Promise<Genre[]> {
+        try {
+            const { data } = await this.axiosInstance.get<GenresApiResponse>(`/genre/movie/list`);
+            return data.genres;
+        } catch (error) {
+            console.error(`Error fetching genres list:`, error);
             throw error;
         }
     }

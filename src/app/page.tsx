@@ -1,11 +1,10 @@
 import { Sidebar, VideoCarousel } from '@/components';
+import { FavoritesList } from '@/components/FavoritesList';
 import { MovieSlider } from '@/components/MovieSlider';
+import { movieList } from '@/lib/actions';
 import { Movie } from '@/types/movies';
-import { cookies } from 'next/headers';
 
 export const dynamic = 'force-dynamic';
-
-const API_BASE_URL = process.env.API_BASE_URL || '';
 
 export default async function Home({
     searchParams,
@@ -13,42 +12,38 @@ export default async function Home({
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
     const query = (await searchParams).query?.toString() || '';
-    const session = (await cookies()).get('session')?.value;
-    let moviesData = null;
-    try {
-        if (session) {
-            const response = await fetch(`${API_BASE_URL}/api/movies`, {
-                method: 'GET',
-                cache: 'no-store',
-                headers: {
-                    Cookie: `session=${session}`,
-                },
-            });
-            if (response.ok) {
-                moviesData = await response.json();
-            }
-        }
-    } catch (error) {
-        console.error('Error connecting to movies API:', error);
-    }
+    const moviesData = await movieList();
+
     return (
         <>
             <VideoCarousel />
-            <div className="flex flex-1 overflow-hidden dark:bg-[#5c5c57]">
+            <div className="flex flex-1 overflow-hidden">
                 <Sidebar q={query} />
                 <div className="flex-1 overflow-y-auto">
                     <div className="space-y-8 p-8">
                         {moviesData ? (
-                            Object.entries(
-                                moviesData.moviesByCategory as Record<string, Movie[]>
-                            ).map(([category, movies]: [string, Movie[]]) => (
-                                <MovieSlider
-                                    key={category}
-                                    title={category}
-                                    category={category}
-                                    movies={movies}
-                                />
-                            ))
+                            <>
+                                {Object.entries(
+                                    moviesData.moviesByCategory as Record<string, Movie[]>
+                                ).map(([category, movies]: [string, Movie[]]) => (
+                                    <MovieSlider
+                                        key={category}
+                                        title={category}
+                                        category={category}
+                                        movies={movies}
+                                    />
+                                ))}
+                                <section>
+                                    <h2 className="text-2xl font-bold mb-4">Tus Favoritos</h2>
+                                    <FavoritesList
+                                        movies={
+                                            Object.values(
+                                                moviesData.moviesByCategory
+                                            ).flat() as Movie[]
+                                        }
+                                    />
+                                </section>
+                            </>
                         ) : (
                             <p className="text-center text-gray-600 dark:text-gray-400">
                                 No hay películas disponibles.

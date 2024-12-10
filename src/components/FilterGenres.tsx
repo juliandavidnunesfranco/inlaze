@@ -1,29 +1,22 @@
 'use client';
-import { cn } from '@/lib/utils';
+import { cn, normalizeString } from '@/lib/utils';
 import { ChevronUp } from 'lucide-react';
 import { Button } from './ui/button';
 import { ScrollArea } from './ui/scroll-area';
 import { useState } from 'react';
+import { genres } from '@/data/genres-list';
+import { useRouter } from 'next/navigation';
 
-const genres = [
-    'Action',
-    'Adventure',
-    'Animation',
-    'Comedy',
-    'Crime',
-    'Documentary',
-    'Drama',
-    'Family',
-    'Fantasy',
-    'Horror',
-    'Mystery',
-    'Romance',
-    'Sci-Fi',
-    'Thriller',
-    'Western',
-];
 export const FilterGenres = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const router = useRouter();
+
+    const handleGenreClick = (genre: string) => {
+        const normalizedGenre = normalizeString(genre);
+        router.push(`/genres/${normalizedGenre}`);
+        setIsOpen(false);
+    };
+
     return (
         <>
             <div className="px-3 py-2">
@@ -52,7 +45,7 @@ export const FilterGenres = () => {
                                         'w-full flex items-center py-2 px-4 text-sm font-medium rounded-md hover:bg-accent hover:text-accent-foreground',
                                         'justify-between'
                                     )}
-                                    onClick={() => setIsOpen(false)}
+                                    onClick={() => handleGenreClick(genre)}
                                 >
                                     {genre}
                                 </button>

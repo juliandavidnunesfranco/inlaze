@@ -29,3 +29,13 @@ export interface MoviesApiResponse {
 export interface TmdbApiResponse {
     results: Movie[];
 }
+
+
+export interface Genre {
+    id: number;
+    name: string;
+}
+
+export interface GenresApiResponse {
+    genres: Genre[];
+}
