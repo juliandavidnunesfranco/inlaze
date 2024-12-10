@@ -14,7 +14,10 @@ export function FavoriteMovies({ movies }: FavoriteMoviesProps) {
 
     useEffect(() => {
         const filteredMovies = movies.filter(movie => favorites.includes(movie.id));
-        setFavoriteMovies(filteredMovies);
+        const uniqueMovies = Array.from(new Set(filteredMovies.map(m => m.id))).map(
+            id => filteredMovies.find(m => m.id === id)!
+        );
+        setFavoriteMovies(uniqueMovies);
     }, [movies, favorites]);
 
     if (favoriteMovies.length === 0) {
