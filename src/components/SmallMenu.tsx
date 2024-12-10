@@ -12,7 +12,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { House } from 'lucide-react';
-import { closeSession } from '@/lib/actions';
+import { signOut } from '@/lib/appwrite';
 
 export const SmallMenu = () => {
     const [position, setPosition] = useState('bottom');
@@ -60,7 +60,7 @@ export const SmallMenu = () => {
                         <DropdownMenuRadioItem
                             value="log Out"
                             onClick={() => {
-                                closeSession();
+                                signOut();
                                 router.refresh();
                             }}
                         >

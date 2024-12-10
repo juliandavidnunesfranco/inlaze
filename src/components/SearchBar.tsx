@@ -1,11 +1,9 @@
-import { searchAction } from '@/lib/actions';
-
 export default function SearchBar({ initialQuery }: { initialQuery: string }) {
     return (
         <div className="px-3 py-2">
             <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">Search</h2>
 
-            <form action={searchAction}>
+            <form action="/search" method="GET">
                 <div className="relative">
                     <input
                         type="text"

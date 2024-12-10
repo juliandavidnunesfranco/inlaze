@@ -1,15 +1,48 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CircleArrowLeft, Eye, EyeOff } from 'lucide-react';
+import { CircleArrowLeft, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { useCardStore } from '@/store';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { createUserAction, fetchLogin } from '@/lib/actions';
+import { cx } from 'class-variance-authority';
+import { z } from 'zod';
 
-import { fetchLogin } from '@/lib/actions';
+const safeString = z
+    .string()
+    .regex(/^[^<>{}]*$/, 'Input contains invalid characters (e.g., HTML or SQL injection).');
+
+const registerSchema = z.object({
+    username: safeString.min(3, 'Username must be at least 3 characters').trim(),
+    email: z
+        .string()
+        .email('Invalid email address')
+        .trim()
+        .regex(/^[^\s<>@,;]+@[^\s<>@,;]+\.[^\s<>@,;]+$/, 'Invalid email format'), // Re-validate email format
+    password: z
+        .string()
+        .min(8, 'Password must be at least 8 characters')
+        .regex(/[A-Za-z0-9!@#$%^&*(),.?":{}|<>]/, 'Password contains invalid characters.') // Only allow safe characters
+        .trim(),
+});
+
+const loginSchema = z.object({
+    email: z
+        .string()
+        .email('Invalid email address')
+        .trim()
+        .regex(/^[^\s<>@,;]+@[^\s<>@,;]+\.[^\s<>@,;]+$/, 'Invalid email format'), // Re-validate email format
+    password: z
+        .string()
+        .min(8, 'Password must be at least 8 characters')
+        .regex(/[A-Za-z0-9!@#$%^&*(),.?":{}|<>]/, 'Password contains invalid characters.') // Only allow safe characters
+        .trim(),
+});
 
 export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
@@ -17,14 +50,55 @@ export default function Login() {
     const router = useRouter();
     const routeLogin = pathname.includes('login');
     const { isCardOpen, openCard, closeCard } = useCardStore();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const fetchAuthLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        const email = (document.getElementById('email') as HTMLInputElement).value;
-        const password = (document.getElementById('password') as HTMLInputElement).value;
-        const data = { email, password };
-        await fetchLogin({ data });
+        setIsLoading(true);
+        try {
+            const email = (document.getElementById('email') as HTMLInputElement).value;
+            const password = (document.getElementById('password') as HTMLInputElement).value;
+            const data = { email, password };
+            const validate = loginSchema.safeParse({ email, password });
+            if (!validate.success) {
+                alert(`Error : ${validate.error.errors[0].message}`);
+                return;
+            }
+            await fetchLogin({ data });
+            alert('Login successful');
+        } catch (error: any) {
+            console.error(error);
+            alert(`Error please try again - ${error.message}`);
+        } finally {
+            setIsLoading(false);
+        }
     };
+
+    const createUser = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        setIsLoading(true);
+        try {
+            const username = (document.getElementById('username') as HTMLInputElement).value;
+            const email = (document.getElementById('new_email') as HTMLInputElement).value;
+            const password = (document.getElementById('new_password') as HTMLInputElement).value;
+            const data = { username, email, password };
+            const validate = registerSchema.safeParse({ username, email, password });
+            if (!validate.success) {
+                alert(`Error : ${validate.error.errors[0].message}`);
+                return;
+            }
+
+            await createUserAction({ data });
+            closeCard();
+            alert('User created successfully, please validate your email for continue');
+        } catch (error: any) {
+            console.error(error);
+            alert(`Error please try again. ${error.message}`);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return (
         <>
             <div className="min-h-screen flex items-center justify-center ">
@@ -67,8 +141,15 @@ export default function Login() {
                                             {!isCardOpen && (
                                                 <CardHeader className="mt-24">
                                                     <Button
+                                                        disabled={isLoading}
                                                         variant={'default'}
-                                                        className="w-full bg-[#F0B90B] hover:bg-[#262626] text-slate-700 hover:text-white"
+                                                        className={cx(
+                                                            'flex items-center justify-center w-full bg-[#F0B90B] hover:bg-[#262626] text-slate-700 hover:text-white',
+                                                            {
+                                                                'opacity-50 cursor-not-allowed':
+                                                                    isLoading,
+                                                            }
+                                                        )}
                                                         onClick={() => openCard()}
                                                     >
                                                         Register with your Email 📨
@@ -90,7 +171,7 @@ export default function Login() {
 
                                                     <div className="relative ">
                                                         <Input
-                                                            id="email"
+                                                            id="new_email"
                                                             type="email"
                                                             className="w-full bg-white rounded-t-md border-none text-slate-700"
                                                             placeholder="Email"
@@ -99,7 +180,7 @@ export default function Login() {
                                                     </div>
                                                     <div className="relative ">
                                                         <Input
-                                                            id="password"
+                                                            id="new_password"
                                                             type={
                                                                 showPassword ? 'text' : 'password'
                                                             }
@@ -129,10 +210,28 @@ export default function Login() {
 
                                                     <div className="relative">
                                                         <Button
-                                                            onClick={closeCard}
-                                                            className="w-full bg-[#F0B90B] hover:bg-[#262626] text-slate-700 hover:text-white"
+                                                            disabled={isLoading}
+                                                            onClick={createUser}
+                                                            className={cx(
+                                                                'flex items-center justify-center w-full bg-[#F0B90B] hover:bg-[#262626] text-slate-700 hover:text-white',
+                                                                {
+                                                                    'opacity-50 cursor-not-allowed':
+                                                                        isLoading,
+                                                                }
+                                                            )}
                                                         >
-                                                            Send 📫
+                                                            {isLoading ? (
+                                                                <>
+                                                                    <Loader2
+                                                                        className={
+                                                                            'mr-2 h-4 w-4 animate-spin'
+                                                                        }
+                                                                    />
+                                                                    Sending...
+                                                                </>
+                                                            ) : (
+                                                                'Create 🎫'
+                                                            )}
                                                         </Button>
                                                     </div>
                                                 </CardContent>
@@ -192,10 +291,28 @@ export default function Login() {
                                             </CardContent>
                                             <CardFooter className="relative flex flex-col justify-center items-center">
                                                 <Button
-                                                    className="w-full bg-[#F0B90B] hover:bg-[#262626] text-slate-700 hover:text-white"
+                                                    disabled={isLoading}
+                                                    className={cx(
+                                                        ' flex items-center justify-center w-full bg-[#F0B90B] hover:bg-[#262626] text-slate-700 hover:text-white',
+                                                        {
+                                                            'opacity-50 cursor-not-allowed':
+                                                                isLoading,
+                                                        }
+                                                    )}
                                                     onClick={fetchAuthLogin}
                                                 >
-                                                    Continue 🎞️
+                                                    {isLoading ? (
+                                                        <>
+                                                            <Loader2
+                                                                className={
+                                                                    'mr-2 h-4 w-4 animate-spin'
+                                                                }
+                                                            />
+                                                            Sending...
+                                                        </>
+                                                    ) : (
+                                                        'Continue 🎞️'
+                                                    )}
                                                 </Button>
                                                 <CardDescription className="text-white text-center mt-4">
                                                     For any questions, reach out to

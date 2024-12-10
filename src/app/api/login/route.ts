@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
     }
 
     try {
-        const { account, databases } = await createAdminClient();
+        const { account, databases } = await createAdminClient(); //admin user in appwrite host
         const { email, password } = await req.json();
         if (!email || !password)
             return NextResponse.json(

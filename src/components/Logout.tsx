@@ -4,7 +4,6 @@ import { UserRound } from 'lucide-react';
 import { Button } from './ui/button';
 import { ModeToggle } from './ModeToggle';
 import { SmallMenu } from './SmallMenu';
-import { closeSession } from '@/lib/actions';
 import { useRouter } from 'next/navigation';
 import {
     DropdownMenu,
@@ -13,6 +12,7 @@ import {
     DropdownMenuRadioGroup,
     DropdownMenuTrigger,
 } from './ui/dropdown-menu';
+import { signOut } from '@/lib/appwrite';
 
 export const Logout = () => {
     const router = useRouter();
@@ -35,7 +35,8 @@ export const Logout = () => {
                             <DropdownMenuRadioGroup>
                                 <DropdownMenuItem
                                     onClick={() => {
-                                        closeSession();
+                                        
+                                        signOut();
                                         router.refresh();
                                     }}
                                 >

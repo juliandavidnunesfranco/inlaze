@@ -38,6 +38,7 @@ export default function RootLayout({
                 >
                     <div className="flex flex-col min-h-screen">
                         <header>
+                            {/* @ts-expect-error Server Component */}
                             <TopBar />
                         </header>
                         <main className="flex-grow">
