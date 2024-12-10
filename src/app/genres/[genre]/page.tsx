@@ -19,8 +19,6 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     const normalizedGenre = denormalizeString(genre);
     const generos = await getGenreByName(normalizedGenre);
 
-    console.log({ genre, normalizedGenre, generos });
-
     if (!generos || generos.length === 0) {
         return {
             title: 'Género no encontrado -inLaze',

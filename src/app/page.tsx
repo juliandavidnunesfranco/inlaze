@@ -3,8 +3,34 @@ import { FavoritesList } from '@/components/FavoritesList';
 import { MovieSlider } from '@/components/MovieSlider';
 import { movieList } from '@/lib/actions';
 import { Movie } from '@/types/movies';
+import { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
+
+export async function generateMetadata(): Promise<Metadata> {
+    const moviesData = await movieList();
+
+    if (!moviesData || Object.keys(moviesData.moviesByCategory).length === 0) {
+        return {
+            title: 'Bienvenido a inLaze',
+            description:
+                'Explora nuestra selección de películas y encuentra tus favoritas en inLaze.',
+            keywords: 'películas, inLaze, entretenimiento, ver películas',
+        };
+    }
+   
+    const categories = Object.keys(moviesData.moviesByCategory);
+    const title = `inLaze - Explora nuestras películas`;
+    const description = `Explora nuestras categorías: ${categories.join(', ')}. Encuentra tus películas favoritas y más en inLaze.`;
+    const keywords = categories.join(', '); 
+
+    return {
+        title,
+        description,
+        keywords,
+    };
+}
+
 
 export default async function Home({
     searchParams,

@@ -24,7 +24,7 @@ export default async function TopBar() {
                     {/* Navigation Links */}
                     <div className="hidden md:flex space-x-10">
                         <Link
-                            href="/popular"
+                            href="/"
                             className="text-sm font-medium transition-colors hover:text-primary"
                         >
                             Popular
