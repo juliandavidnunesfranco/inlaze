@@ -1,30 +1,17 @@
-import { cookies } from 'next/headers';
 import { FavoriteMovies } from '@/components';
 import { Movie } from '@/types/movies';
 import Link from 'next/link';
+import { movieList } from '@/lib/actions';
+import { Metadata } from 'next';
 
-const API_BASE_URL = process.env.API_BASE_URL || '';
+export const metadata: Metadata = {
+    title: 'Mis Películas Favoritas - inLaze',
+    description: 'Mis películas favoritas en inLaze',
+    keywords: ['movies', 'action', 'romance'],
+};
 
 export default async function FavoritesPage() {
-    const session = (await cookies()).get('session')?.value;
-    let moviesData = null;
-
-    try {
-        if (session) {
-            const response = await fetch(`${API_BASE_URL}/api/movies`, {
-                method: 'GET',
-                cache: 'no-store',
-                headers: {
-                    Cookie: `session=${session}`,
-                },
-            });
-            if (response.ok) {
-                moviesData = await response.json();
-            }
-        }
-    } catch (error) {
-        console.error('Error connecting to movies API:', error);
-    }
+    const moviesData = await movieList();
 
     return (
         <div className="container mx-auto px-4 py-8">

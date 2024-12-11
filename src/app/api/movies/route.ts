@@ -55,7 +55,7 @@ export async function GET(req: NextRequest) {
 
         const results = await Promise.all(
             categories.map(async ({ id }) => {
-                const response = await tmdb.getMoviesByCategory(id);
+                const response = await tmdb.getMoviesByCategory(id);  
                 return { category: id, movies: response.results };
             })
         );
