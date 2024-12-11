@@ -119,6 +119,36 @@ async function searchMovies(query: string): Promise<{ results: Movie[] }> {
     return { results: [] };
 }
 
+export async function getMovieByTitle(title: string): Promise<Movie | null> {
+    try {
+        const moviesData = await movieList();
+        if (!moviesData) return null;
+
+        const allMovies = Object.values(moviesData.moviesByCategory).flat() as Movie[];
+        return (
+            allMovies.find(movie => normalizeString(movie.title) === normalizeString(title)) || null
+        );
+    } catch (error) {
+        console.error('Error fetching movie:', error);
+        return null;
+    }
+}
+
+export async function getRelatedMovies(movie: Movie): Promise<Movie[]> {
+    try {
+        const moviesData = await movieList();
+        if (!moviesData) return [];
+
+        const allMovies = Object.values(moviesData.moviesByCategory).flat() as Movie[];
+        return allMovies
+            .filter(m => m.id !== movie.id && m.genre_ids.some(id => movie.genre_ids.includes(id)))
+            .slice(0, 4);
+    } catch (error) {
+        console.error('Error fetching related movies:', error);
+        return [];
+    }
+}
+
 async function getGenres(): Promise<{ result: Genre[] }> {
     try {
         const session = (await cookies()).get('session')?.value;

@@ -1,7 +1,10 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 import { Heart } from 'lucide-react';
 import { useFavoriteStore } from '@/store';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { normalizeString } from '@/lib/utils';
 
 interface MovieCardProps {
     movie: {
@@ -39,15 +42,20 @@ export function MovieCard({ movie }: MovieCardProps) {
         setIsLocalFavorite(!isLocalFavorite);
     };
 
+    const route = normalizeString(movie.title);
+
     return (
         <div className="relative group rounded-lg overflow-hidden bg-gray-900 transition-all duration-300 hover:shadow-[0_0_15px_rgba(59,130,246,0.5)]">
             <div className="aspect-[2/3] relative">
-                <img
-                    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                    alt={movie.title}
-                    className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <Link href={`/detail/${route}`}>
+                    <img
+                        src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                        alt={movie.title}
+                        className="w-full h-full object-cover"
+                    />
+
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </Link>
             </div>
             <div className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
                 <h3 className="text-white font-medium mb-1 line-clamp-1">{movie.title}</h3>

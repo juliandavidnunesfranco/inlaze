@@ -29,7 +29,6 @@ export const MovieSlider: React.FC<MovieSliderProps> = ({ title, movies }) => {
         swiperRef.current.slideNext();
     }, []);
 
-    console.log('MOVIES', movies[0])
     return (
         <section className="py-4 w-full overflow-hidden">
             <div className="max-w-full px-4 sm:px-6 lg:px-8">

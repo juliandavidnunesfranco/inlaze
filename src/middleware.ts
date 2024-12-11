@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const protectedRoutes = ['/favorites', '/popular', '/search'];
+const protectedRoutes = ['/favorites', '/popular', '/search', '/detail/:path*'];
 const publicRoutes = ['/login', '/register', '/'];
 
 export default function middleware(req: NextRequest) {
