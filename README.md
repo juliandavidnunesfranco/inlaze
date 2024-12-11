@@ -112,3 +112,27 @@ Algunos se crean dinamicamente y otros ya se han establecido.
 
 Tambien se crea archivos de respaldo y mayor agilidad en los navegadores 
 como lo es el archivo sitemap.ts
+
+
+---
+
+> [!WARNIG]
+>
+> # COMO INICIAR ?
+
+El proyecto en el root cuenta con un archvio **.nvmrc** que nos inidica que version de node.js
+que se necesita ejecutar, basta con estar en el directorio y ejecutar el comando nvm use,
+tambien es necesario alimentar el archivo .env con las variables de entorno que nos entregan
+las diferentes apis de terceros como los son appwrite y themoviedb por ello se creo un archivo .env.template
+que contiene las variables que son necesarias en el proyecto.
+
+Alimentado este documento ahora es necesario instalar las dependencias
+ejecuta **npm i** para esta instalacion.
+
+conseguido este paso construimos con **npm run build** lo que compilara el proyecto
+y por ultimo ejecutamos **npm start** por default el proyecto se ejecuta en el puerto 3000.
+
+
+
+
+
