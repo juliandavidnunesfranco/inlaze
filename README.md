@@ -146,8 +146,13 @@ alli
 
 - No podras ver la informacion de las peliculas hasta no registrarte y hacer el login
 - Cuando te registrar al correo electronico te llegara un email que tendras que validar para poder hacer login
-- desde ese correo seras redirigido a la app para continuar visitando el proyecto
-
+- desde ese correo seras redirigido a la app para continuar visitando el proyecto pero antes haz el login
+- luego podras ver el listado de categorias de las peliculas y en cada pelicula tendras la opcion de marcarla como favorita (boton en forma de corazon)
+- Tambien si das click sobre una pelicula podras navegar a verla a detalle
+- En la parte superior esta la ruta de favoritos podras navegar adicionando o restando de estos
+- y en el costado izquierdo tenemos un listado de generos de peliculas para facilitarte la busqueda
+- como tambien una barra de busqueda que te dirige al resultado
+- por ultimo cierra tu session en el icono de la persona.
 
 
 
