@@ -133,6 +133,22 @@ conseguido este paso construimos con **npm run build** lo que compilara el proye
 y por ultimo ejecutamos **npm start** por default el proyecto se ejecuta en el puerto 3000.
 
 
+> [!IMPORTANT]
+>
+> -   [x] https://inlaze-pearl.vercel.app/
+
+---
+
+El proyecto esta ejecutandose en produccion en 
+### https://inlaze-pearl.vercel.app/
+
+alli
+
+- No podras ver la informacion de las peliculas hasta no registrarte y hacer el login
+- Cuando te registrar al correo electronico te llegara un email que tendras que validar para poder hacer login
+- desde ese correo seras redirigido a la app para continuar visitando el proyecto
+
+
 
 
 
