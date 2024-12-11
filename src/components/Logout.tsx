@@ -1,9 +1,7 @@
 'use client';
-
 import { UserRound } from 'lucide-react';
-import { Button } from './ui/button';
-import { ModeToggle } from './ModeToggle';
-import { SmallMenu } from './SmallMenu';
+import { Button } from '@/components/ui/button';
+import { ModeToggle, SmallMenu } from '@/components';
 import { useRouter } from 'next/navigation';
 import {
     DropdownMenu,
@@ -11,12 +9,16 @@ import {
     DropdownMenuItem,
     DropdownMenuRadioGroup,
     DropdownMenuTrigger,
-} from './ui/dropdown-menu';
+} from '@/components/ui/dropdown-menu';
 import { signOut } from '@/lib/appwrite';
 
 export const Logout = () => {
     const router = useRouter();
 
+    const handleLogout = async () => {
+        await signOut();
+        router.refresh();
+    };
     return (
         <>
             <div className="flex pr-10 gap-2">
@@ -33,15 +35,7 @@ export const Logout = () => {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-56 bg-[#f4f4f4] dark:bg-[#5c5c57]">
                             <DropdownMenuRadioGroup>
-                                <DropdownMenuItem
-                                    onClick={() => {
-                                        
-                                        signOut();
-                                        router.refresh();
-                                    }}
-                                >
-                                    logout
-                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={handleLogout}>logout</DropdownMenuItem>
                             </DropdownMenuRadioGroup>
                         </DropdownMenuContent>
                     </DropdownMenu>

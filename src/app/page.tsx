@@ -1,6 +1,4 @@
-import { Sidebar, VideoCarousel } from '@/components';
-import { FavoritesList } from '@/components/FavoritesList';
-import { MovieSlider } from '@/components/MovieSlider';
+import { MovieSlider, Sidebar, VideoCarousel, FavoritesList } from '@/components';
 import { movieList } from '@/lib/actions';
 import { Movie } from '@/types/movies';
 import { Metadata } from 'next';
@@ -18,11 +16,13 @@ export async function generateMetadata(): Promise<Metadata> {
             keywords: 'películas, inLaze, entretenimiento, ver películas',
         };
     }
-   
+
     const categories = Object.keys(moviesData.moviesByCategory);
     const title = `inLaze - Explora nuestras películas`;
-    const description = `Explora nuestras categorías: ${categories.join(', ')}. Encuentra tus películas favoritas y más en inLaze.`;
-    const keywords = categories.join(', '); 
+    const description = `Explora nuestras categorías: ${categories.join(
+        ', '
+    )}. Encuentra tus películas favoritas y más en inLaze.`;
+    const keywords = categories.join(', ');
 
     return {
         title,
@@ -30,7 +30,6 @@ export async function generateMetadata(): Promise<Metadata> {
         keywords,
     };
 }
-
 
 export default async function Home({
     searchParams,

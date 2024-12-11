@@ -1,7 +1,6 @@
 'use client';
-
 import { useFavoriteStore } from '@/store';
-import { MovieCard } from './MovieCard';
+import { MovieCard } from '@/components';
 import { useEffect, useState } from 'react';
 
 interface Movie {

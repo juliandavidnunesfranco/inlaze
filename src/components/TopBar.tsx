@@ -1,14 +1,11 @@
+'use client';
 import Link from 'next/link';
 import { ModeToggle, SmallMenu } from '@/components';
 import { Button } from './ui/button';
 import { UserRound } from 'lucide-react';
-import { cookies } from 'next/headers';
 import { Logout } from './Logout';
 
-export default async function TopBar() {
-    const cookieSession = await cookies();
-    const session = cookieSession.get('session');
-
+export default function TopBar({ session }: { session: string | undefined }) {
     return (
         <>
             <nav className="w-full p-6 flex items-center justify-between">

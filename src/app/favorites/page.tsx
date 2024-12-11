@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import { FavoriteMovies } from '@/components/FavoriteMovies';
+import { FavoriteMovies } from '@/components';
 import { Movie } from '@/types/movies';
 import Link from 'next/link';
 

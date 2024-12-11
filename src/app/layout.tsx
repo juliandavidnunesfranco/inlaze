@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
-import { ThemeProvider } from '@/components/theme-provider';
+import { ThemeProvider, TopBar } from '@/components';
+import { cookies } from 'next/headers';
+
 import localFont from 'next/font/local';
 import './globals.css';
-import { TopBar } from '@/components';
 
 const geistSans = localFont({
     src: './fonts/GeistVF.woff',
@@ -63,13 +64,15 @@ export const metadata: Metadata & { title: TemplateString } = {
     },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
     children,
     auth,
 }: Readonly<{
     children: React.ReactNode;
     auth: React.ReactNode;
 }>) {
+    const cookieSession = await cookies();
+    const session = cookieSession.get('session')?.value;
     return (
         <html lang="en" suppressHydrationWarning>
             <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
@@ -81,8 +84,7 @@ export default function RootLayout({
                 >
                     <div className="flex flex-col min-h-screen">
                         <header>
-                            {/* @ts-expect-error Server Component */}
-                            <TopBar />
+                            <TopBar session={session} />
                         </header>
                         <main className="flex-grow flex flex-col">
                             {auth}

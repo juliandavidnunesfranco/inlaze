@@ -1,5 +1,4 @@
-import Login from '@/components/Login';
-import { Modal } from '@/components/Modal';
+import { Login, Modal } from '@/components';
 
 export default function Page() {
     return (

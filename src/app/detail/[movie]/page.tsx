@@ -1,10 +1,8 @@
 import { Metadata } from 'next';
 import { getMovieByTitle, getRelatedMovies } from '@/lib/actions';
 import { notFound } from 'next/navigation';
-import { MovieDetail } from '@/components/MovieDetail';
-import { MovieGrid } from '@/components/MovieGrid';
+import { MovieDetail, MovieGrid } from '@/components';
 import { denormalizeString } from '@/lib/utils';
-
 
 type Params = Promise<{ movie: string }>;
 
@@ -12,7 +10,6 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     const { movie } = await params;
     const title = denormalizeString(movie);
     const movies = await getMovieByTitle(title);
-
 
     if (!movies) {
         return {

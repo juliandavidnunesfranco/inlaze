@@ -6,6 +6,15 @@ import { normalizeString } from './utils';
 
 const API_URL = process.env.API_BASE_URL || '';
 
+async function getCookies() {
+    const cookieStore = cookies();
+    const session = (await cookieStore).get('session')?.value || null;
+    if (!session) {
+        return null;
+    }
+    return session;
+}
+
 async function createUserAction({
     data,
 }: {
@@ -184,4 +193,12 @@ async function getGenreByName(name: string): Promise<Genre[] | undefined> {
     }
 }
 
-export { fetchLogin, createUserAction, searchMovies, getGenreByName, getGenres, movieList };
+export {
+    fetchLogin,
+    createUserAction,
+    searchMovies,
+    getGenreByName,
+    getGenres,
+    movieList,
+    getCookies,
+};

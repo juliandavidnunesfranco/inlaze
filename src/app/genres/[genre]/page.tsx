@@ -2,18 +2,12 @@ import { Metadata } from 'next';
 import { getGenreByName, movieList } from '@/lib/actions';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { genres } from '@/data/genres-list';
 import { Movie } from '@/types/movies';
 import { MovieCard } from '@/components';
 import { denormalizeString, normalizeString } from '@/lib/utils';
 
 type Params = Promise<{ genre: string }>;
 
-export async function generateStaticParams() {
-    return genres.map(genre => ({
-        genre: normalizeString(genre),
-    }));
-}
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
     const { genre } = await params;
     const normalizedGenre = denormalizeString(genre);

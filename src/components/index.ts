@@ -1,27 +1,36 @@
-import { FilterGenres } from './FilterGenres';
-import { Modal } from './Modal';
-import { ModeToggle } from './ModeToggle';
-import { MovieCard } from './MovieCard';
-import { MovieSlider } from './MovieSlider';
-import { Sidebar } from './Sidebar';
-import { SmallMenu } from './SmallMenu';
 import Login from './Login';
 import { Logout } from './Logout';
-import SearchBar from './SearchBar';
-import TopBar from './TopBar';
+import { Modal } from './Modal';
+import { ThemeProvider } from './theme-provider';
 import VideoCarousel from './VideoCarousel';
-
+import { FavoriteMovies } from './FavoriteMovies';
+import { FavoritesList } from './FavoritesList';
+import { MovieCard } from './MovieCard';
+import { MovieDetail } from './MovieDetail';
+import { MovieSlider } from './MovieSlider';
+import { MovieGrid } from './MovieGrid';
+import { ModeToggle } from './ModeToggle';
+import { SmallMenu } from './SmallMenu';
+import TopBar from './TopBar';
+import { FilterGenres } from './FilterGenres';
+import SearchBar from './SearchBar';
+import { Sidebar } from './Sidebar';
 export {
-    FilterGenres,
     Login,
     Logout,
     Modal,
-    ModeToggle,
+    ThemeProvider,
+    VideoCarousel,
+    FavoriteMovies,
+    FavoritesList,
     MovieCard,
+    MovieDetail,
+    MovieGrid,
     MovieSlider,
-    SearchBar,
-    Sidebar,
+    ModeToggle,
     SmallMenu,
     TopBar,
-    VideoCarousel,
+    FilterGenres,
+    SearchBar,
+    Sidebar,
 };

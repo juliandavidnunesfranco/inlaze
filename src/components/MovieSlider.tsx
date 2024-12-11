@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import { Movie } from '@/types/movies';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { MovieCard } from './MovieCard';
+import { MovieCard } from '@/components';
 
 import 'swiper/css';
 import 'swiper/css/navigation';

@@ -1,5 +1,4 @@
 'use client';
-
 import { Movie } from '@/types/movies';
 import { Heart } from 'lucide-react';
 import { useState, useEffect } from 'react';
@@ -128,7 +127,7 @@ export function MovieDetail({ movie }: MovieDetailProps) {
                                 </span>
                             </div>
                             <div className="flex items-center justify-start mt-2">
-                                <p>total votes: {movie.vote_count.toFixed(0)}</p>
+                                <p>total votos: {movie.vote_count.toFixed(0)}</p>
                             </div>
                         </div>
                     </div>

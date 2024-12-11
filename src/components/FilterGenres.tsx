@@ -1,8 +1,8 @@
 'use client';
 import { cn, normalizeString } from '@/lib/utils';
 import { ChevronUp } from 'lucide-react';
-import { Button } from './ui/button';
-import { ScrollArea } from './ui/scroll-area';
+import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { useState } from 'react';
 import { genres } from '@/data/genres-list';
 import { useRouter } from 'next/navigation';
